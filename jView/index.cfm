@@ -9,7 +9,7 @@
 
 <body>
 <div id="head" class="wrapper">
-WhosOnCFC jView Viewer
+WhosOnCFC jView Viewer  <input id="allToggle" type="button" value="Turn Show All Off" onclick="showAllToggle()" /> / <input id="hiddenToggle" type="button" value="Turn Show Hidden Off" onclick="showHiddenToggle()" />
 </div>
 <div id="wrapper" class="wrapper">
 	<div id="leftpane" style="width: 300px; float: left;"></div>
@@ -21,10 +21,32 @@ WhosOnCFC jView Viewer
 
 <script type="text/javascript">
 	appInit = 0;
-	oldData = new Object();
 	jsonData = new Object();
 	colMap = new Object();
 	currentClient = '';
+	showAll = true;
+	showHidden = true;
+	fadeSpeed = 3000;
+	
+	function showAllToggle(){
+		if(showAll==true){
+			showAll=false;
+			$('#allToggle').val('Turn Show All On');
+		} else {
+			showAll=true;
+			$('#allToggle').val('Turn Show All Off');			
+		}
+	}
+	
+	function showHiddenToggle(){
+		if(showHidden==true){
+			showHidden=false;
+			$('#hiddenToggle').val('Turn Show Hidden On');
+		} else {
+			showHidden=true;
+			$('#hiddenToggle').val('Turn Show Hidden Off');			
+		}
+	}
 	
 	function drawScreens(){
 		var pane = '';
@@ -37,9 +59,8 @@ WhosOnCFC jView Viewer
 		if(appInit == 0){
 			for(var i=0; i<jsonData.DATA.length; i++){
 				pane = $('#leftpane').html();
-				thisClient = "'" + jsonData.DATA[i][colMap["CLIENTID"]] + "'";
 				
-				div2 = '" class="client" onclick="viewClient(' + thisClient + ')" style="display: none;" >';
+				div2 = '" class="client" style="display: none;" >';
 			
 				pane += div1 + jsonData.DATA[i][colMap["CLIENTID"]] + div2;
 				pane += jsonData.DATA[i][colMap['HOSTNAME']] + '<br />';
@@ -62,7 +83,7 @@ WhosOnCFC jView Viewer
 				
 				if(!found){
 					//if( currentClient == $(this).attr('id') ) viewClient(jsonDataDATA[0][colMap["CLIENTID"]];
-					$(this).fadeOut(1000, function() { $(this).remove(); });
+					$(this).fadeOut(fadeSpeed, function() { $(this).remove(); });
 				}
 			});
 			
@@ -91,10 +112,12 @@ WhosOnCFC jView Viewer
 			}
 		}
 		
-		if( $('#leftpane').height() > $('#rightpane').height() ) $('#rightpane').height( $('#leftpane').height() );
+		//if( $('#leftpane').height() > $('#rightpane').height() ) $('#rightpane').height( $('#leftpane').height() );
 		
 		if(currentClient.length) viewClient(currentClient);
-		$('[class^=client]').fadeIn(1000,function(){setHover()});
+		$('[class^=client]').each(function(){
+			if( $(this).css('display') == 'none') $(this).fadeIn(fadeSpeed,function(){setHover()});
+		});
 		setTimeout('getData()',30000);
 	}
 	
@@ -103,6 +126,7 @@ WhosOnCFC jView Viewer
 							  
 			function () {
 				$(this).css({ 'background-color' : '#666666', 'color' : '#FFF', 'cursor' : 'pointer' });
+				viewClient( $(this).attr('id') );
 			}, 
 			function () {
 				$(this).css({ 'background-color' : '#ccc', 'color' : '#000' });
@@ -115,6 +139,10 @@ WhosOnCFC jView Viewer
 		
 		var data =  $.ajax({
 			url:	'ajaxProxy.cfc?method=getUserData',
+			data: ({
+				showAll : showAll,
+				showHidden : showHidden
+			}),
 			async:	false
 		}).responseText;
 		
@@ -140,12 +168,22 @@ WhosOnCFC jView Viewer
 				innerHTML += '<strong>Last Updated</strong>: ' + jsonData.DATA[i][colMap['LASTUPDATED']] + '<br />';
 				innerHTML += '<strong>IP</strong>: ' + jsonData.DATA[i][colMap['IP']] + '<br />';
 				innerHTML += '<strong>Host Name</strong>: ' + jsonData.DATA[i][colMap['HOSTNAME']] + '<br />';
+				innerHTML += '<strong>User Agent</strong>: ' + jsonData.DATA[i][colMap['USERAGENT']] + '<br />';
 				innerHTML += '<strong>Current Page</strong>: ' + jsonData.DATA[i][colMap['CURRENTPAGE']] + '<br />';
 				innerHTML += '<strong>Pages in History</strong>: ' + jsonData.DATA[i][colMap['PAGEHISTORY']].length + '<br />';
 				
-				for(var j=0; j<jsonData.DATA[i][colMap['PAGEHISTORY']].length; j++){
-					innerHTML += jsonData.DATA[i][colMap['PAGEHISTORY']][j].PAGETIME + 's ';
-					innerHTML += jsonData.DATA[i][colMap['PAGEHISTORY']][j].PAGE + '<br />';
+				var tableHead = '<table style="width: 465px; display: block; overflow: hidden; white-space: nowrap;" cellpadding="0" cellspacing="2" border="0">';
+				var tableFoot = '</table>';
+				
+				if(jsonData.DATA[i][colMap['PAGEHISTORY']].length){
+					innerHTML += tableHead;
+				
+					for(var j=0; j<jsonData.DATA[i][colMap['PAGEHISTORY']].length; j++){
+						innerHTML += '<tr><td valign="top" >' + jsonData.DATA[i][colMap['PAGEHISTORY']][j].PAGETIME + 's ' + '</td>' ;
+						innerHTML += '<td >' + jsonData.DATA[i][colMap['PAGEHISTORY']][j].PAGE + '</td></tr>';
+					}
+					
+					innerHTML += tableFoot;
 				}
 				
 				$('#detail').html(innerHTML); 
@@ -157,9 +195,8 @@ WhosOnCFC jView Viewer
 		getData();	
 		//scroll the message box to the top offset of browser's scrool bar
 		
-		$(window).scroll(function(){
-			var myTop = 					  
-		  	$('#detail').animate({top:($(window).scrollTop()+35)+"px" },{queue: false, duration: 100});
+		$(window).scroll(function(){				  
+		  	$('#detail').animate({top:($(window).scrollTop()+ 47 )+"px" },{queue: false, duration: 100});
 		});
 	});
 </script>
