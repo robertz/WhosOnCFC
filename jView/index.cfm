@@ -96,6 +96,7 @@ WhosOnCFC jView Viewer
 		}
 		
 		if(currentClient.length) viewClient(currentClient);
+		setHover();
 		setTimeout('getData()',30000);
 	}
 	
@@ -156,7 +157,6 @@ WhosOnCFC jView Viewer
 	
 	$(document).ready(function(){
 		getData();	
-		setHover();
 	});
 </script>
 
