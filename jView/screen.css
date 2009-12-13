@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* CSS Document */
+
+BODY{
+	font-family:Verdana, Geneva, sans-serif;
+	font-size: .6em;
+}
+
+.client{
+	width: 92%;  
+	background-color: #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid #000;
+	padding: 10px;
+	margin-bottom: 4px;
+	margin-left: 4px;
+}
+
+.detail{
+	width: 95%;  
+	background-color: #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid #000;
+	padding: 10px;
+	margin-bottom: 4px;
+}
+
+.wrapper{
+	width: 800px; 
+	margin: 0px auto 0px auto; 
+	background-color: #FFF;
+	padding-top: 8px;
+}
