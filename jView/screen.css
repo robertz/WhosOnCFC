@@ -18,7 +18,8 @@ BODY{
 }
 
 .detail{
-	width: 95%;  
+	position: absolute;
+	width: 470px;  
 	background-color: #ccc;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;

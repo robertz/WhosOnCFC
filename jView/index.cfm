@@ -42,7 +42,7 @@ WhosOnCFC jView Viewer
 				div2 = '" class="client" onclick="viewClient(' + thisClient + ')" style="display: none;" >';
 			
 				pane += div1 + jsonData.DATA[i][colMap["CLIENTID"]] + div2;
-				pane += jsonData.DATA[i][colMap['IP']] + '<br />';
+				pane += jsonData.DATA[i][colMap['HOSTNAME']] + '<br />';
 				pane += jsonData.DATA[i][colMap['LASTUPDATED']] + '<br />';
 				pane += '</div>';
 				
@@ -75,23 +75,23 @@ WhosOnCFC jView Viewer
 					div2 = '" class="client" onclick="viewClient(' + thisClient + ')" style="display: none;" >';
 				
 					pane += div1 + jsonData.DATA[i][colMap["CLIENTID"]] + div2;
-					pane += jsonData.DATA[i][colMap['IP']] + '<br />';
+					pane += jsonData.DATA[i][colMap['HOSTNAME']] + '<br />';
 					pane += jsonData.DATA[i][colMap['LASTUPDATED']] + '<br />';
 					pane += '</div>';				
 					
 					$('#leftpane').html(pane);
-					
 				} else {
 					pane = '';
 					
-					pane += jsonData.DATA[i][colMap['IP']] + '<br />';
+					pane += jsonData.DATA[i][colMap['HOSTNAME']] + '<br />';
 					pane += jsonData.DATA[i][colMap['LASTUPDATED']] + '<br />';
 					
 					$('[id^=' + jsonData.DATA[i][colMap["CLIENTID"]] +']').html(pane);
 				}
 			}
-			
 		}
+		
+		if( $('#leftpane').height() > $('#rightpane').height() ) $('#rightpane').height( $('#leftpane').height() );
 		
 		if(currentClient.length) viewClient(currentClient);
 		$('[class^=client]').fadeIn(1000,function(){setHover()});
@@ -155,6 +155,12 @@ WhosOnCFC jView Viewer
 	
 	$(document).ready(function(){
 		getData();	
+		//scroll the message box to the top offset of browser's scrool bar
+		
+		$(window).scroll(function(){
+			var myTop = 					  
+		  	$('#detail').animate({top:($(window).scrollTop()+35)+"px" },{queue: false, duration: 100});
+		});
 	});
 </script>
 
