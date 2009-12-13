@@ -1,9 +1,10 @@
 <!---
 	Name         : whoson.cfc
-	Author       : Shane Zehnder
+	Author       : Robert Shane Zehnder
 	Created      : November 13, 2007
-	Last Updated : April 25, 2008
+	Last Updated : December 12, 2009
 	History      :
+				 : Minor cosmetic changes, switched to Application.cfc (rsz 12.12.09)
 				 : Added support for non-standard ports (rsz 9.19.08)
 				 : Added abilility to ingore specified domains (rsz 9.19.08)
 				 : Now stores 24 hours of history.
@@ -35,7 +36,7 @@
 		<cfargument name="args" type="struct" required="false" hint="User defined configuration" />
 		
 		<!--- Currently running version --->
-		<cfset variables.version="2.2.3" />
+		<cfset variables.version="2.2.4" />
         
         <!--- Configuring tracking times.  Added in 2.2.1 --->
         <cfset variables.trackTime=24 />

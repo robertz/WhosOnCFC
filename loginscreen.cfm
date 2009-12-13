@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Login</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 </head>
 
 <body>
@@ -29,7 +30,7 @@
 <cfquery name="validateUser" dbtype="query">
 	SELECT username, password, roles
 	FROM myQuery
-	WHERE username='#form.uname#' and password='#form.pass#'
+	WHERE username=<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uname#"> and password=<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pass#">
 </cfquery>
 
 <cfoutput>
@@ -54,19 +55,32 @@ Count: #validateUser.RecordCount#<br />
 <a href="/">HOME</a><br /><br />
 
 <cfif session.userinfo.user is "Guest">
-<cfform name="loginForm" action="#CGI.SCRIPT_NAME#" method="post">
-User	<cfinput type="text" name="uname"  required="true" message="Username is required" validateat="onSubmit" /><br />
-Pass	<cfinput type="text" name="pass" required="true" message="Password is required" validateat="onSubmit"  /><br />
+<form id="loginForm" action="#CGI.SCRIPT_NAME#" method="post">
+User	<input type="text" name="uname" id="uname" /><br />
+Pass	<input type="text" name="pass" id="pass" /><br />
 <br />
 <br />
 <input type="submit" value="Login Now!">
-</cfform>
+</form>
 
 <cfelse>
 <a href="/?logout">LOGOUT</a>
 </cfif>
 
 </cfoutput>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#loginForm').submit(function(){
+			if( $('#uname').val().length & $('#pass').val().length ){
+				return true;
+			} else {
+				alert('Doh! You must enter a username and password!');
+				return false;
+			}
+		});
+	});
+</script>
 
 <br /><br />
 Admin: admin/admin<br />
