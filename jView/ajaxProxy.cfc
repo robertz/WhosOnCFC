@@ -3,7 +3,7 @@
 	<cffunction name="getUserData" access="remote" returntype="query" returnformat="json">
 		
 		<cfscript>
-			return this.getWhosOn().whosOnline();
+			return this.getWhosOn().whosOnline(showAll=true,showHidden=true);
 		</cfscript>
 		
 	</cffunction>

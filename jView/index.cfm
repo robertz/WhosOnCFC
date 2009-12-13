@@ -39,7 +39,7 @@ WhosOnCFC jView Viewer
 				pane = $('#leftpane').html();
 				thisClient = "'" + jsonData.DATA[i][colMap["CLIENTID"]] + "'";
 				
-				div2 = '" class="client" onclick="viewClient(' + thisClient + ')" >';
+				div2 = '" class="client" onclick="viewClient(' + thisClient + ')" style="display: none;" >';
 			
 				pane += div1 + jsonData.DATA[i][colMap["CLIENTID"]] + div2;
 				pane += jsonData.DATA[i][colMap['IP']] + '<br />';
@@ -47,8 +47,6 @@ WhosOnCFC jView Viewer
 				pane += '</div>';
 				
 				$('#leftpane').html(pane);
-				
-				$('[id^=' + jsonData.DATA[i][colMap["CLIENTID"]] +']').fadeIn(1000);
 			}
 			appInit=1;
 		} else {
@@ -74,7 +72,7 @@ WhosOnCFC jView Viewer
 					pane = $('#leftpane').html();
 					thisClient = "'" + jsonData.DATA[i][colMap["CLIENTID"]] + "'";
 					
-					div2 = '" class="client" onclick="viewClient(' + thisClient + ')" >';
+					div2 = '" class="client" onclick="viewClient(' + thisClient + ')" style="display: none;" >';
 				
 					pane += div1 + jsonData.DATA[i][colMap["CLIENTID"]] + div2;
 					pane += jsonData.DATA[i][colMap['IP']] + '<br />';
@@ -92,11 +90,11 @@ WhosOnCFC jView Viewer
 					$('[id^=' + jsonData.DATA[i][colMap["CLIENTID"]] +']').html(pane);
 				}
 			}
-
+			
 		}
 		
 		if(currentClient.length) viewClient(currentClient);
-		setHover();
+		$('[class^=client]').fadeIn(1000,function(){setHover()});
 		setTimeout('getData()',30000);
 	}
 	
@@ -104,7 +102,7 @@ WhosOnCFC jView Viewer
 		$('[class^=client]').hover(
 							  
 			function () {
-				$(this).css({ 'background-color' : '#666666', 'color' : '#FFF' });
+				$(this).css({ 'background-color' : '#666666', 'color' : '#FFF', 'cursor' : 'pointer' });
 			}, 
 			function () {
 				$(this).css({ 'background-color' : '#ccc', 'color' : '#000' });
