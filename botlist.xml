@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<botlistdata>
+	<botlist>AideRSS</botlist>
+  	<botlist>AOLserver</botlist>
+  	<botlist>Bloglines/3.1</botlist>
+	<botlist>bot</botlist>
+	<botlist>cfschedule</botlist>
+  	<botlist>ColdFusion</botlist>
+  	<botlist>Crawler</botlist>
+  	<botlist>DAUM RSS Robot</botlist>
+	<botlist>DoCoMo</botlist>
+  	<botlist>feedburner</botlist>
+  	<botlist>Feedfetcher</botlist>
+	<botlist>FeedReader</botlist>
+  	<botlist>FeedValidator/1.3</botlist>
+  	<botlist>GreatNews</botlist>
+  	<botlist>Intelliseek</botlist>
+  	<botlist>ISC Systems</botlist>
+  	<botlist>Java/1</botlist>
+  	<botlist>Mediapartners-Google</botlist>
+  	<botlist>megite</botlist>
+  	<botlist>Moreoverbot</botlist>
+  	<botlist>MSIECrawler</botlist>
+  	<botlist>Msnbot</botlist>
+  	<botlist>MXNA</botlist>
+  	<botlist>NewsGatorOnline</botlist>
+  	<botlist>NG/2.0</botlist>
+  	<botlist>Nutch</botlist>  
+  	<botlist>PHP</botlist>
+	<botlist>proximic</botlist>
+  	<botlist>Python-urllib</botlist>
+	<botlist>R6_CommentReader</botlist>
+	<botlist>ScoutJet</botlist>
+  	<botlist>ShopWiki</botlist>
+  	<botlist>slurp</botlist>
+  	<botlist>Snarfer</botlist>
+  	<botlist>Sphere Scout</botlist>
+  	<botlist>Spider</botlist>
+  	<botlist>SurveyBot/2.3</botlist>
+  	<botlist>topicblogs</botlist>
+  	<botlist>twiceler</botlist>
+  	<botlist>Windows Live Writer</botlist>
+  	<botlist>YahooSeeker</botlist>
+  	<botlist>YahooFeedSeeker</botlist> 
+</botlistdata>
