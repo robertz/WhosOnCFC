@@ -9,12 +9,19 @@
 
 <body>
 <div id="head" class="wrapper">
-WhosOnCFC jView Viewer  <input id="allToggle" type="button" value="Turn Show All Off" onclick="showAllToggle()" /> / <input id="hiddenToggle" type="button" value="Turn Show Hidden Off" onclick="showHiddenToggle()" />
+<span style="color: white; font-weight: bold;">
+	WhosOnCFC jQuery Viewer  
+	<input id="allToggle" type="button" value="Turn Show All Off" onclick="showAllToggle()" /> / 
+	<input id="hiddenToggle" type="button" value="Turn Show Hidden Off" onclick="showHiddenToggle()" />
+</span>
 </div>
 <div id="wrapper" class="wrapper">
 	<div id="leftpane" style="width: 300px; float: left;"></div>
 	<div id="rightpane" style="width: 495px; float: right;">
-		<div id="detail" class="detail">Click on an item to see the details</div>
+		<div id="detail" class="detail">
+			Click on an item to see the details
+			<span id="loadingIcon" style="float: right; display: none;"><img src="images/spin_light.gif" />
+		</div>
 	</div>
 	<br style="clear: both;" />
 </div>
@@ -82,7 +89,6 @@ WhosOnCFC jView Viewer  <input id="allToggle" type="button" value="Turn Show All
 				}
 				
 				if(!found){
-					//if( currentClient == $(this).attr('id') ) viewClient(jsonDataDATA[0][colMap["CLIENTID"]];
 					$(this).fadeOut(fadeSpeed, function() { $(this).remove(); });
 				}
 			});
@@ -118,6 +124,8 @@ WhosOnCFC jView Viewer  <input id="allToggle" type="button" value="Turn Show All
 		$('[class^=client]').each(function(){
 			if( $(this).css('display') == 'none') $(this).fadeIn(fadeSpeed,function(){setHover()});
 		});
+		
+		$('#loadingIcon').hide();		
 		setTimeout('getData()',30000);
 	}
 	
@@ -136,6 +144,7 @@ WhosOnCFC jView Viewer  <input id="allToggle" type="button" value="Turn Show All
 	}
 	
 	function getData(){
+		$('#loadingIcon').show();
 		
 		var data =  $.ajax({
 			url:	'ajaxProxy.cfc?method=getUserData',
@@ -148,9 +157,11 @@ WhosOnCFC jView Viewer  <input id="allToggle" type="button" value="Turn Show All
 		
 		jsonData = JSON.parse(data);
 		
-		for(var i = 0; i < jsonData.COLUMNS.length; i++) {
-			colMap[jsonData.COLUMNS[i]] = i;        
-		}		
+		if(!appInit){
+			for(var i = 0; i < jsonData.COLUMNS.length; i++) {
+				colMap[jsonData.COLUMNS[i]] = i;        
+			}		
+		}
 		
 		drawScreens();
 	}
@@ -160,16 +171,21 @@ WhosOnCFC jView Viewer  <input id="allToggle" type="button" value="Turn Show All
 		for(var i=0; i<jsonData.DATA.length; i++){
 			if(jsonData.DATA[i][colMap['CLIENTID']]==id){
 				var innerHTML = ''
-				innerHTML += '<strong>Viewing details for</strong>: ' + id + '<br /><br />';
+				innerHTML += '<strong>Viewing details for</strong>: ' + id;
+				innerHTML += '<span id="loadingIcon" style="float: right; display: none;"><img src="images/spin_light.gif" /></span>';
+				innerHTML += '<br /><br />';
 				innerHTML += '<strong>Created</strong>: ' + jsonData.DATA[i][colMap['CREATED']] + '<br />';
 				innerHTML += '<strong>City/Country</strong>: ' + jsonData.DATA[i][colMap['CITY']] + '/' + jsonData.DATA[i][colMap['COUNTRY']] + '<br />';
+				innerHTML += '<strong>Coordinates</strong>: ' + jsonData.DATA[i][colMap['COORDS']] + '<br />';
+				innerHTML += '<strong>User</strong>: ' + jsonData.DATA[i][colMap['USERID']] + '<br />';
+				innerHTML += '<strong>Roles</strong>: ' + jsonData.DATA[i][colMap['ROLES']] + '<br />';
 				innerHTML += '<strong>Entry Page</strong>: ' + jsonData.DATA[i][colMap['ENTRYPAGE']] + '<br />';
 				innerHTML += '<strong>Referrer</strong>: ' + jsonData.DATA[i][colMap['REFERER']] + '<br />';				
 				innerHTML += '<strong>Last Updated</strong>: ' + jsonData.DATA[i][colMap['LASTUPDATED']] + '<br />';
 				innerHTML += '<strong>IP</strong>: ' + jsonData.DATA[i][colMap['IP']] + '<br />';
 				innerHTML += '<strong>Host Name</strong>: ' + jsonData.DATA[i][colMap['HOSTNAME']] + '<br />';
 				innerHTML += '<strong>User Agent</strong>: ' + jsonData.DATA[i][colMap['USERAGENT']] + '<br />';
-				innerHTML += '<strong>Current Page</strong>: ' + jsonData.DATA[i][colMap['CURRENTPAGE']] + '<br />';
+				innerHTML += '<strong>Current Page</strong>: ' + jsonData.DATA[i][colMap['CURRENTPAGE']] + '<br /><br />';
 				innerHTML += '<strong>Pages in History</strong>: ' + jsonData.DATA[i][colMap['PAGEHISTORY']].length + '<br />';
 				
 				var tableHead = '<table style="width: 465px; display: block; overflow: hidden; white-space: nowrap;" cellpadding="0" cellspacing="2" border="0">';

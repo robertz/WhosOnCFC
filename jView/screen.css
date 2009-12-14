@@ -4,14 +4,16 @@
 BODY{
 	font-family:Verdana, Geneva, sans-serif;
 	font-size: .6em;
+	background: url('images/background.png') fixed repeat-x #000;
 }
 
 .client{
 	width: 92%;  
 	background-color: #ccc;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border: 1px solid #000;
+	border-radius: .6em;
+	-moz-border-radius: .6em;
+	-webkit-border-radius: .6em;
+	border: 1px solid silver;
 	padding: 10px;
 	margin-bottom: 4px;
 	margin-left: 4px;
@@ -21,9 +23,10 @@ BODY{
 	position: absolute;
 	width: 470px;  
 	background-color: #ccc;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border: 1px solid #000;
+	border-radius: .6em;
+	-moz-border-radius: .6em;
+	-webkit-border-radius: .6em;
+	border: 1px solid silver;
 	padding: 10px;
 	margin-bottom: 4px;
 }
@@ -31,6 +34,5 @@ BODY{
 .wrapper{
 	width: 800px; 
 	margin: 0px auto 0px auto; 
-	background-color: #FFF;
 	padding-top: 8px;
 }
