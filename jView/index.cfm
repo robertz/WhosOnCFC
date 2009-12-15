@@ -9,11 +9,17 @@
 
 <body>
 <div id="head" class="wrapper">
-<span style="color: white; font-weight: bold;">
+<span style="color: white; font-weight: bold; width: 100%;">
 	WhosOnCFC jQuery Viewer  
-	<input id="allToggle" type="button" value="Turn Show All Off" onclick="showAllToggle()" /> / 
-	<input id="hiddenToggle" type="button" value="Turn Show Hidden Off" onclick="showHiddenToggle()" />
+	<input id="allToggle" type="button" value="Show All: OFF" onclick="showAllToggle()" /> / 
+	<input id="hiddenToggle" type="button" value="Show Hidden: OFF" onclick="showHiddenToggle()" />
+	
+	<span style="float: right; padding-top: 9px;">
+	<a href="http://www.kisdigital.com" style="color: blue;" target="_blank">http://www.kisdigital.com/</a>
+	</span>	
 </span>
+
+
 </div>
 <div id="wrapper" class="wrapper">
 	<div id="leftpane" style="width: 300px; float: left;"></div>
@@ -31,28 +37,34 @@
 	jsonData = new Object();
 	colMap = new Object();
 	currentClient = '';
-	showAll = true;
-	showHidden = true;
+	showAll = false;
+	showHidden = false;
 	fadeSpeed = 3000;
 	
 	function showAllToggle(){
 		if(showAll==true){
 			showAll=false;
-			$('#allToggle').val('Turn Show All On');
+			$('#allToggle').val('Show All: OFF');
 		} else {
 			showAll=true;
-			$('#allToggle').val('Turn Show All Off');			
+			$('#allToggle').val('Show All: ON');			
 		}
 	}
 	
 	function showHiddenToggle(){
 		if(showHidden==true){
 			showHidden=false;
-			$('#hiddenToggle').val('Turn Show Hidden On');
+			$('#hiddenToggle').val('Show Hidden: OFF');
 		} else {
 			showHidden=true;
-			$('#hiddenToggle').val('Turn Show Hidden Off');			
+			$('#hiddenToggle').val('Show Hidden: ON');			
 		}
+	}
+	
+	function makeLink(url){
+		var strReturn = '<a href="' + url + '" style="color: blue;" target="_blank" title="'+ url + '" >' + url + '</a>';
+		
+		return strReturn;
 	}
 	
 	function drawScreens(){
@@ -118,11 +130,9 @@
 			}
 		}
 		
-		//if( $('#leftpane').height() > $('#rightpane').height() ) $('#rightpane').height( $('#leftpane').height() );
-		
 		if(currentClient.length) viewClient(currentClient);
 		$('[class^=client]').each(function(){
-			if( $(this).css('display') == 'none') $(this).fadeIn(fadeSpeed,function(){setHover()});
+			if( $(this).css('display') == 'none') $(this).fadeIn(fadeSpeed,function(){setHover( )});
 		});
 		
 		$('#loadingIcon').hide();		
@@ -174,18 +184,20 @@
 				innerHTML += '<strong>Viewing details for</strong>: ' + id;
 				innerHTML += '<span id="loadingIcon" style="float: right; display: none;"><img src="images/spin_light.gif" /></span>';
 				innerHTML += '<br /><br />';
+				innerHTML += '<strong>Hidden Client</strong>: ' + jsonData.DATA[i][colMap['HIDECLIENT']] + '<br />';
 				innerHTML += '<strong>Created</strong>: ' + jsonData.DATA[i][colMap['CREATED']] + '<br />';
 				innerHTML += '<strong>City/Country</strong>: ' + jsonData.DATA[i][colMap['CITY']] + '/' + jsonData.DATA[i][colMap['COUNTRY']] + '<br />';
 				innerHTML += '<strong>Coordinates</strong>: ' + jsonData.DATA[i][colMap['COORDS']] + '<br />';
 				innerHTML += '<strong>User</strong>: ' + jsonData.DATA[i][colMap['USERID']] + '<br />';
 				innerHTML += '<strong>Roles</strong>: ' + jsonData.DATA[i][colMap['ROLES']] + '<br />';
-				innerHTML += '<strong>Entry Page</strong>: ' + jsonData.DATA[i][colMap['ENTRYPAGE']] + '<br />';
-				innerHTML += '<strong>Referrer</strong>: ' + jsonData.DATA[i][colMap['REFERER']] + '<br />';				
+				innerHTML += '<strong>Entry Page</strong>: ' + makeLink( jsonData.DATA[i][colMap['ENTRYPAGE']] ) + '<br />';
+				innerHTML += '<strong>Referrer</strong>: ' + makeLink( jsonData.DATA[i][colMap['REFERER']] ) + '<br />';				
 				innerHTML += '<strong>Last Updated</strong>: ' + jsonData.DATA[i][colMap['LASTUPDATED']] + '<br />';
 				innerHTML += '<strong>IP</strong>: ' + jsonData.DATA[i][colMap['IP']] + '<br />';
 				innerHTML += '<strong>Host Name</strong>: ' + jsonData.DATA[i][colMap['HOSTNAME']] + '<br />';
 				innerHTML += '<strong>User Agent</strong>: ' + jsonData.DATA[i][colMap['USERAGENT']] + '<br />';
-				innerHTML += '<strong>Current Page</strong>: ' + jsonData.DATA[i][colMap['CURRENTPAGE']] + '<br /><br />';
+				innerHTML += '<strong>Current Page</strong>: ' + makeLink( jsonData.DATA[i][colMap['CURRENTPAGE']] ) + '<br /><br />';
+				innerHTML += '<strong>Total Pages</strong>: ' + jsonData.DATA[i][colMap['PAGECOUNT']] + '<br />';
 				innerHTML += '<strong>Pages in History</strong>: ' + jsonData.DATA[i][colMap['PAGEHISTORY']].length + '<br />';
 				
 				var tableHead = '<table style="width: 465px; display: block; overflow: hidden; white-space: nowrap;" cellpadding="0" cellspacing="2" border="0">';
@@ -196,7 +208,7 @@
 				
 					for(var j=0; j<jsonData.DATA[i][colMap['PAGEHISTORY']].length; j++){
 						innerHTML += '<tr><td valign="top" >' + jsonData.DATA[i][colMap['PAGEHISTORY']][j].PAGETIME + 's ' + '</td>' ;
-						innerHTML += '<td >' + jsonData.DATA[i][colMap['PAGEHISTORY']][j].PAGE + '</td></tr>';
+						innerHTML += '<td >' + makeLink( jsonData.DATA[i][colMap['PAGEHISTORY']][j].PAGE ) + '</td></tr>';
 					}
 					
 					innerHTML += tableFoot;
