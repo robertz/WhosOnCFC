@@ -26,7 +26,7 @@
 	<div id="rightpane" style="width: 495px; float: right;">
 		<div id="detail" class="detail">
 			Click on an item to see the details
-			<span id="loadingIcon" style="float: right; display: none;"><img src="images/spin_light.gif" />
+			<span id="loadingIcon" style="float: right; display: none;"> <img src="images/spin_light.gif" /></span>
 		</div>
 	</div>
 	<br style="clear: both;" />
