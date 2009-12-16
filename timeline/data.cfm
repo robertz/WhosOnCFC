@@ -38,7 +38,7 @@ function ISODateToTS(str) {
 	<cfquery name="rs" dbtype="query">
 		SELECT *
 		FROM arguments.dataset
-		WHERE ClientID='#arguments.clientid#'
+		WHERE ClientID=<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.clientid#" />
 	</cfquery>
 	
 	<cfoutput>
