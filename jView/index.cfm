@@ -43,7 +43,7 @@
 	var timer;
 	
 	function showAllToggle(){
-		if(showAll==true){
+		if(showAll===true){
 			showAll=false;
 			$('#allToggle').val('Show All: OFF');
 		} else {
@@ -55,7 +55,7 @@
 	}
 	
 	function showHiddenToggle(){
-		if(showHidden==true){
+		if(showHidden===true){
 			showHidden=false;
 			$('#hiddenToggle').val('Show Hidden: OFF');
 		} else {
@@ -81,7 +81,7 @@
 		$('#loadingIcon').show();
 		// leftpane
 		
-		if(appInit == 0){
+		if(appInit === 0){
 			for(var i=0; i<jsonData.DATA.length; i++){
 				pane = $('#leftpane').html();
 				
@@ -236,7 +236,7 @@
 		//scroll the message box to the top offset of browser's scrool bar
 		
 		$(window).scroll(function(){				  
-		  	$('#detail').animate({top:($(window).scrollTop()+ 47 )+"px" },{queue: false, duration: 100});
+		  	$('#detail').animate({top:($(window).scrollTop()+ 47 )+"px" },{queue: false, duration: 10});
 		});
 	});
 </script>
