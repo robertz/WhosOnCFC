@@ -14,10 +14,6 @@
 WhosOnCFC <cfoutput>#application.whoson.getCurrentControlSet().version#</cfoutput><br /> 
 <a href="/?reinit" style="color: blue;">Reinit WhosOnCFC</a><br />
 
-<br /><br />
-
-<a href="http://docs.google.com/Doc?id=dhjwqsht_12c77dd7cn" target="_blank">Documentation</a>
-
 <br />
 <br />
 

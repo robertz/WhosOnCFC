@@ -14,7 +14,8 @@
 	<input id="allToggle" type="button" value="Show All: OFF" onclick="showAllToggle()" /> / 
 	<input id="hiddenToggle" type="button" value="Show Hidden: OFF" onclick="showHiddenToggle()" />
 	
-	<span style="float: right; padding-top: 9px;">
+	<span style="float: right; padding-top: 9px; color: white;">
+	<a href="http://whosoncfc.riaforge.org" style="color: blue;" target="_blank">http://whosoncfc.riaforge.org/</a> / 
 	<a href="http://www.kisdigital.com" style="color: blue;" target="_blank">http://www.kisdigital.com/</a>
 	</span>	
 </span>
