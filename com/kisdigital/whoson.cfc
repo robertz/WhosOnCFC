@@ -65,7 +65,7 @@
 		
 		
 		<!--- Configure variables if the argument collection is not passed --->
-		<cfset variables.botListUrl="http://whosoncfc.kisdigital.com/botlist.xml" />
+		<cfset variables.botListUrl="http://www.kisdigital.com/botlist.xml" />
 		<!--- 
 			What is the threshhold (how many hits from 1 IP address) before we assume it's
 			a bot and should not be tracked by WhosOnCFC?
@@ -112,7 +112,7 @@
 		
 		<cfif len(variables.botListUrl)>
 			<cfset variables.botList=this.getBotList(variables.botListUrl) />
-		</cfif> --->
+		</cfif> 
 		
 		<cfif not len(variables.botList)>
 			<!--- No botList supplied, default to internal list --->
@@ -448,7 +448,7 @@
 		<cfquery name="filter" dbtype="query">
 			SELECT *
 			FROM uQuery
-			WHERE userid='#arguments.user#'
+			WHERE userid=<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.user#" />
 		</cfquery>
 		
 		<cfif filter.RecordCount and len(filter.roles)>
@@ -599,7 +599,7 @@
 						userData.EntryPage=userData.CurrentPage;
 						userData.PageCount=1;
 						
-						if(len(WhosOn.QueryString)) userData.CurrentPage=userData.CurrentPage & "?#WhosOn.QueryString#";
+						if(len(trim(WhosOn.QueryString))) userData.CurrentPage=userData.CurrentPage & "?#WhosOn.QueryString#";
 						userData.UserAgent=this.StripHTML(WhosOn.UserAgent);
 						
 						if(variables.pagehistory){
@@ -633,7 +633,7 @@
 						if((WhosOn.ServerPort is not '80') AND (WhosOn.ServerPort is not '443')) variables.activeusers[updateFlag].CurrentPage = variables.activeusers[updateFlag].CurrentPage & ':' & WhosOn.ServerPort;
 						variables.activeusers[updateFlag].CurrentPage = variables.activeusers[updateFlag].currentPage &  WhosOn.CurrentPage;
 						
-						if(len(WhosOn.QueryString)) variables.activeusers[updateFlag].CurrentPage = variables.activeusers[updateFlag].CurrentPage & "?#WhosOn.QueryString#";
+						if(len(trim(WhosOn.QueryString))) variables.activeusers[updateFlag].CurrentPage = variables.activeusers[updateFlag].CurrentPage & "?#WhosOn.QueryString#";
 						
 						if(variables.pagehistory){
 							result=arrayLen(variables.activeusers[updateFlag].PageHistory);
