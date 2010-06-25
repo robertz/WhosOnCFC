@@ -13,7 +13,7 @@
 
 WhosOnCFC <cfoutput>#application.whoson.getCurrentControlSet().version#</cfoutput><br /> 
 <a href="/?reinit" style="color: blue;">Reinit WhosOnCFC</a><br />
-Testing the Git process
+
 <br />
 <br />
 
@@ -33,10 +33,12 @@ Testing the Git process
 		
 </cfoutput>
 
+<a href="/whosondump.cfm" style="color: blue;">Dump</a> | 
 <a href="/loginscreen.cfm" style="color: blue;">Login Screen (Security Demo)</a> | 
 <a href="/whosonstats.cfm" style="color: blue;">WhosOnStats Demo Page</a> |
 <a href="/viewer/" style="color: blue;">Enhanced WhosOn Viewer</a> | 
 <a href="/timeline/" style="color: blue;">cfTimeline View</a> | 
+<a href="/jView/" style="color: blue;">jQuery Viewer</a> | 
 <a href="/botlist.xml" style="color: blue;">View Current Bot List</a> 
 
 <br /><br />

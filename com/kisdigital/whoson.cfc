@@ -36,7 +36,7 @@
 		<cfargument name="args" type="struct" required="false" hint="User defined configuration" />
 		
 		<!--- Currently running version --->
-		<cfset variables.version="2.2.4" />
+		<cfset variables.version="2.2.5" />
         
         <!--- Configuring tracking times.  Added in 2.2.1 --->
         <cfset variables.trackTime=24 />
@@ -479,20 +479,23 @@
 		<cfargument name="whoson" type="struct" required="true" />
 		
 		<cfset var userCount=0 />
-		<cfset var n=0 />
-		<cfset var j=0 />
-		<cfset var i=0 />
-		<cfset var userData="" />
-		<cfset var result="" />
-		<cfset var updateFlag=0 />
-		<cfset var skipUpdate=0 />
-		<cfset var hideClient=0 />
-		<cfset var skipIPCheck=0 />
-		<cfset var gInfo="" />
-		<cfset var tempHistory="" />
-        
+		<cfset var n = 0/>
+		<cfset var j = 0/>
+		<cfset var i = 0/>
+		<cfset var userData = ""/>
+		<cfset var result = ""/>
+		<cfset var updateFlag = 0/>
+		<cfset var skipUpdate = 0/>
+		<cfset var hideClient = 0/>
+		<cfset var skipIPCheck = 0/>
+		<cfset var gInfo = ""/>
+		<cfset var tempHistory = ""/>
+		
+        <cfset var botListLength = listLen(variables.botlist)/>
+		<cfset var z = 0/>  
         <cfset var retUser=whoson.thisUser />
-        
+        <cfset var methodStart = getTickCount()/>
+		
 		<!--- 
 		Check to see if our client is in the activeusers array
 		 --->
@@ -500,36 +503,7 @@
 		<cftry>
 			<cflock name="TrackerLockForWritingUsers" type="exclusive" timeout="30">
 			<cfscript>
-				// if(not structKeyExists(variables,"activeusers")) variables.activeusers=arrayNew(1);
-				
-				for(j=1; j lte listLen(variables.botList); j=j+1){
-					hideClient = hideClient + findNoCase(listGetAt(variables.botList,j),arguments.whoson.UserAgent,1);
-				}
-				
-				if(listLen(variables.ignoreIPs)){
-					for(j=1; j lte listLen(variables.ignoreIPs); j=j+1){
-						hideClient = hideClient + findNoCase(listGetAt(variables.ignoreIPs,j),arguments.whoson.IP,1);
-					}
-				}
-				
-				if(listLen(variables.ignoreDomains)){
-					n=getHostName(address=WhosOn.IP);
-					for(j=1; j lte listLen(variables.ignoreDomains); j=j+1){
-						hideClient = hideClient + findNoCase(listGetAt(variables.ignoreDomains,j),n,1);
-					}
-					n=0;
-				}
-												
-				if((hideClient gt 0) and (variables.showbots eq 0)){
-					skipUpdate=skipUpdate+hideClient;
-				}
-				
-				for(j=1; j lte listLen(variables.ignorePages); j=j+1){
-					skipUpdate = skipUpdate + findNoCase(listGetAt(variables.ignorePages,j),arguments.whoson.CurrentPage,1);
-				}
-				 
-				n=0;
-				
+			
 				// Reset the userCount if we purged out any data	
 				userCount=arrayLen(variables.activeusers);
 					
@@ -550,22 +524,47 @@
 					}
 					userCount=arrayLen(variables.activeusers);
 				}
-													
-				if(skipUpdate eq 0){
-					
-					// See if we can find the client in active user array
-					for(n=1; n lte userCount; n=n+1){
-						if(variables.ActiveUsers[n].ClientID is WhosOn.thisClient) updateFlag=n;
+				// See if we can find the client in active user array
+				for(n=1; n lte userCount; n=n+1){
+					if(variables.ActiveUsers[n].ClientID is WhosOn.thisClient) updateFlag=n;
+				}
+				if(updateFlag){
+				 skipUpdate = variables.ActiveUsers[updateFlag].hideClient;
+				}																	
+				if((hideClient gt 0) and (variables.showbots eq 0)){
+					skipUpdate=skipUpdate+hideClient;
+				}
+				// Check ignored pages every request
+				z = listLen(variables.ignorePages);
+				for(j=1; j lte z; j=j+1){
+					skipUpdate = skipUpdate + findNoCase(listGetAt(variables.ignorePages,j),arguments.whoson.CurrentPage,1);
+				}
+				n=0;
+				// Insert / Update a client
+				if(updateFlag eq 0){
+					// Check these values on the first run through
+					for(j=1; j lte botListLength; j=j+1){
+						hideClient = hideClient + findNoCase(listGetAt(variables.botList,j),arguments.whoson.UserAgent,1);
 					}
-					
-					// Insert / Update a client
-					if(updateFlag eq 0){
+					z = listLen(variables.ignoreIPs);
+					if(z){
+						for(j=1; j lte z; j=j+1){
+							hideClient = hideClient + findNoCase(listGetAt(variables.ignoreIPs,j),arguments.whoson.IP,1);
+						}
+					}
+					z = listLen(variables.ignoreDomains);
+					if(z){
+						n=getHostName(address=WhosOn.IP);
+						for(j=1; j lte z; j=j+1){
+							hideClient = hideClient + findNoCase(listGetAt(variables.ignoreDomains,j),n,1);
+						}
+						n=0;
+					}
+						
+					if(not skipUpdate){			
 						retUser="Guest";
-						
 						userData=structNew();
-						
 						// This defines the information tracked on your user
-						
 						userData.UserID=WhosOn.thisUser;
 						userData.ClientID=WhosOn.thisClient;
 						userData.Roles=Whoson.roles;
@@ -574,34 +573,26 @@
 						userData.Referer=WhosOn.Referer;
 						userData.IP=WhosOn.IP;
 						userData.HostName=getHostName(address=WhosOn.IP);
-						
 						if(hideClient gt 0){
 							userData.hideClient=1;
 						} else {
 							userData.hideClient=0;
 						}
-						
 						if(variables.geoTrack){
 							gInfo=getGeoInfo(address=whoson.ip);
-							
 							userData.Coords=gInfo.coordinates;
 							userData.Country=gInfo.country;
 							userData.City=gInfo.local;
 						}
-
 						userData.CurrentPage = WhosOn.Prefix & WhosOn.ServerName;
 						//Account for non-standard web ports
 						if((WhosOn.ServerPort is not '80') AND (WhosOn.ServerPort is not '443')) userData.CurrentPage = userData.CurrentPage & ':' & WhosOn.ServerPort;
-						userData.CurrentPage = userData.CurrentPage & WhosOn.CurrentPage;
-						
-						
+						userData.CurrentPage = userData.CurrentPage & WhosOn.CurrentPage;	
 						//Joe Danziger requested MOD
 						userData.EntryPage=userData.CurrentPage;
 						userData.PageCount=1;
-						
 						if(len(trim(WhosOn.QueryString))) userData.CurrentPage=userData.CurrentPage & "?#WhosOn.QueryString#";
 						userData.UserAgent=this.StripHTML(WhosOn.UserAgent);
-						
 						if(variables.pagehistory){
 							userData.PageHistory=ArrayNew(1);
 							tempHistory=structNew();
@@ -609,44 +600,36 @@
 							tempHistory.PageTime=0;
 							ArrayAppend(userData.PageHistory,tempHistory);
 						}
+						userData.execTime = getTickCount() - methodStart;
 						arrayAppend(variables.activeusers,userData);
 						variables.structKeys=structKeyList(userData);
 						userCount=arrayLen(variables.activeusers);
-											
-					} else {
-						
+					}					
+				} else {	
+					if(not skipUpdate){
 						// This defines the information updated after a user has been created
-						
 						// If user is already stored, check to see if their session has expired
 						// and set the userid to guest
 						if(DateDiff("n",variables.ActiveUsers[updateFlag].LastUpdated,Now()) gte variables.defaultTimeout){
 							retUser="Guest";
 						}
-						
 						variables.activeusers[updateFlag].UserID=WhosOn.thisUser;
 						variables.activeusers[updateFlag].Roles=Whoson.roles;				
 						variables.activeusers[updateFlag].IP=WhosOn.IP;
-						
 						variables.activeusers[updateFlag].CurrentPage=WhosOn.Prefix & WhosOn.ServerName;
-						
 						// Account for non-standard web ports
 						if((WhosOn.ServerPort is not '80') AND (WhosOn.ServerPort is not '443')) variables.activeusers[updateFlag].CurrentPage = variables.activeusers[updateFlag].CurrentPage & ':' & WhosOn.ServerPort;
 						variables.activeusers[updateFlag].CurrentPage = variables.activeusers[updateFlag].currentPage &  WhosOn.CurrentPage;
-						
 						if(len(trim(WhosOn.QueryString))) variables.activeusers[updateFlag].CurrentPage = variables.activeusers[updateFlag].CurrentPage & "?#WhosOn.QueryString#";
-						
 						if(variables.pagehistory){
 							result=arrayLen(variables.activeusers[updateFlag].PageHistory);
 							variables.activeusers[updateFlag].PageHistory[result].PageTime=DateDiff("s",variables.activeusers[updateFlag].LastUpdated,Now());
 							tempHistory=structNew();
 							tempHistory.Page=variables.activeusers[updateFlag].CurrentPage;
 							tempHistory.PageTime=0;
-							ArrayAppend(variables.activeusers[updateFlag].PageHistory,tempHistory);
-							
+							ArrayAppend(variables.activeusers[updateFlag].PageHistory,tempHistory);	
 							// Clean the user history
-							
 							result=arrayLen(variables.activeusers[updateFlag].PageHistory);
-							
 							n=0;
 							for(j=result; j gt 0; j=j-1){
 								n=n+variables.activeusers[updateFlag].PageHistory[j].PageTime;
@@ -655,9 +638,9 @@
 						}
 						variables.activeusers[updateFlag].PageCount=variables.activeusers[updateFlag].PageCount+1;
 						variables.activeusers[updateFlag].LastUpdated=Now();
-											
-					}				
-				}
+						variables.activeusers[updateFlag].execTime = getTickCount() - methodStart;
+					}					
+				}				
 			</cfscript>
 			</cflock>
 			<cfcatch type="any">
