@@ -12,6 +12,11 @@
 <body>
 
 WhosOnCFC <cfoutput>#application.whoson.getCurrentControlSet().version#</cfoutput><br /> 
+
+
+
+
+
 <a href="/?reinit" style="color: blue;">Reinit WhosOnCFC</a><br />
 
 <br />
