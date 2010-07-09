@@ -1,23 +1,24 @@
 <cfapplication name="WhosOnCFC220TestApp" clientmanagement="yes" sessionmanagement="yes" sessiontimeout="#CreateTimeSpan(0,0,30,0)#" loginstorage="session">
 
+
 <cfif not structKeyExists(session,"userinfo") or structKeyExists(url,"logout")>
 	<cfset session.userinfo.user="Guest" />
     <cfset session.userinfo.roles="" />
 </cfif>
 
-<cfif not isdefined("application.whosoninit") or isdefined("url.reinit")> 
-	<cfset session.user="Guest" />   
-	
+<cfif not isdefined("application.whosoninit") or isdefined("url.reinit")>
+	<cfset session.user="Guest" />
+
 	<cfscript>
 		// Configure WhosOnCFC settings
 		whosonconfig=structNew();
-		
+
 		whosonconfig.trackTime=24;													// How many hours do we want WhosOnCFC to track
 		whosonconfig.botTrackTime=2;												// How many hours do we want to track bots
 		whosonconfig.ignoreIPs='';													// Supply a CSV list of FULL IP addresses to ignore
-		
+
 		whosonconfig.ignoreDomains='yahoo.com,search.msn.com';						// CSV list of domains to ignore
-		
+
 		whosonconfig.defaultTimeout=30;												// How many minutes to wait before timing out a session
 		whosonconfig.botListUrl='http://whosoncfc.kisdigital.com/botlist.xml';		// URL for botlist.xml, leave blank if you do not wish to use the XML file
 		whosonconfig.ipBlockListThreshhold=5;										// How many clientid's allowed from 1 IP address before it assumes its a bot
@@ -31,7 +32,7 @@
 	</cfscript>
 
 	<cfset application.whoson=createObject('component','com.kisdigital.whoson').init(whosonconfig) />
-    
+
 	<cfset application.lastInit=Now()>
 	<cfset application.whosoninit=1>
 </cfif>
@@ -59,7 +60,7 @@
 	if(session.userinfo.user is not thisRequest.trackedUser){
 		session.userinfo.user=thisRequest.trackedUser;
 		session.userinfo.roles='';
-	} 
+	}
 </cfscript>
 
 
